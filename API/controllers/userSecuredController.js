@@ -2,7 +2,7 @@
 import bcrypt from 'bcrypt'
 import pool from '../config/db.js'
 
-const getUsers = async (req, res) => {
+const getUsersSecured = async (req, res) => {
 	try {
 		const result = await pool.query('SELECT * FROM users')
 		res.json(result.rows)
@@ -12,7 +12,7 @@ const getUsers = async (req, res) => {
 	}
 }
 
-const login = async (req, res) => {
+const loginSecured = async (req, res) => {
 	const { email, password } = req.body
 	console.log(email, password)
 	if (!email || !password) {
@@ -20,7 +20,7 @@ const login = async (req, res) => {
 	}
 
 	try {
-		const result = await pool.query(`SELECT * FROM users WHERE email = '${email}'`)
+		const result = await pool.query('SELECT * FROM users WHERE email = $1', [email])
 		console.log(result)
 		const user = result.rows[0]
 		if (!user) {
@@ -38,7 +38,7 @@ const login = async (req, res) => {
 	}
 }
 
-const register = async (req, res) => {
+const registerSecured = async (req, res) => {
 	const { name, email, password } = req.body
 	if (!name || !email || !password) {
 		return res.status(400).json({ message: 'Name, email, and password are required' })
@@ -46,13 +46,15 @@ const register = async (req, res) => {
 
 	const hashedPassword = await bcrypt.hash(password, 10)
 	try {
-		const result = await pool.query(
-			`INSERT INTO users (name, email, password) VALUES ('${name}', '${email}', '${hashedPassword}') RETURNING id`
-		)
+		const result = await pool.query('INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id', [
+			name,
+			email,
+			hashedPassword,
+		])
 		res.status(201).json({ message: 'User registered', userId: result.rows[0].id, status: 201 })
 	} catch (error) {
 		res.status(500).json({ message: 'Error registering user', error: error.message, status: 500 })
 	}
 }
 
-export { getUsers, login, register }
+export { getUsersSecured, loginSecured, registerSecured }
