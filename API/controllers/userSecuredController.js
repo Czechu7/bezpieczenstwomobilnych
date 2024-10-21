@@ -14,14 +14,12 @@ const getUsersSecured = async (req, res) => {
 
 const loginSecured = async (req, res) => {
 	const { email, password } = req.body
-	console.log(email, password)
 	if (!email || !password) {
 		return res.status(400).json({ message: 'Email and password are required', status: 400 })
 	}
 
 	try {
 		const result = await pool.query('SELECT * FROM users WHERE email = $1', [email])
-		console.log(result)
 		const user = result.rows[0]
 		if (!user) {
 			return res.status(401).json({ message: 'Invalid credentials', status: 401 })
