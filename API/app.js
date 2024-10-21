@@ -5,15 +5,6 @@ import bcrypt from 'bcrypt'
 const app = express()
 app.use(express.json())
 
-const users = [
-	{
-		id: 1,
-		name: 'John Doe',
-		email: 'john@doe.com',
-		password: '123456',
-	},
-]
-
 const pool = new Pool({
 	user: 'postgres',
 	host: 'localhost',
