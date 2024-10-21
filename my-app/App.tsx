@@ -13,12 +13,18 @@ export default function App() {
 	}
 
 	return (
-		<SafeAreaView>
-			<View style={styles.container}>
-				<Text>Open up App.tsx to start working on your app!</Text>
-				<StatusBar style='auto' />
-				<TextInput onChangeText={setEmail} value={email} placeholder='Wpisz email' />
-				<TextInput onChangeText={setPassword} value={password} secureTextEntry placeholder='Wpisz haslo' />
+		<SafeAreaView style={styles.container}>
+			<View style={styles.loginContainer}>
+				<Text style={styles.label}>Login:</Text>
+				<TextInput style={styles.input} placeholder='Wpisz adres email' value={email} onChangeText={setEmail} />
+				<Text style={styles.label}>Hasło:</Text>
+				<TextInput
+					style={styles.input}
+					placeholder='Wpisz hasło'
+					value={password}
+					onChangeText={setPassword}
+					secureTextEntry
+				/>
 				<Button title='Zaloguj' onPress={handleLogin} />
 			</View>
 		</SafeAreaView>
@@ -28,8 +34,29 @@ export default function App() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
-		alignItems: 'center',
 		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#f0f0f0',
+	},
+	loginContainer: {
+		width: '80%',
+		padding: 20,
+		backgroundColor: '#ffffff',
+		borderRadius: 10,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.2,
+		shadowRadius: 4,
+	},
+	label: {
+		fontSize: 18,
+		marginBottom: 10,
+	},
+	input: {
+		height: 40,
+		borderColor: '#cccccc',
+		borderWidth: 1,
+		marginBottom: 20,
+		paddingHorizontal: 10,
 	},
 })
