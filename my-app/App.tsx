@@ -11,7 +11,8 @@ export default function App() {
 		console.log('Email:', email)
 		console.log('Password:', password)
 		const res = await login(email, password)
-		if (res) {
+		console.log('Response:', res)
+		if (res.status === 200) {
 			Alert.alert('Login', 'Login successful')
 		}
 	}
