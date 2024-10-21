@@ -14,12 +14,15 @@ const getUsers = async (req, res) => {
 
 const login = async (req, res) => {
 	const { email, password } = req.body
+	console.log(email, password)
 	if (!email || !password) {
 		return res.status(400).json({ message: 'Email and password are required', status: 400 })
 	}
 
 	try {
-		const result = await pool.query('SELECT * FROM users WHERE email = $1', [email])
+		// const result = await pool.query('SELECT * FROM users WHERE email = $1', [email])
+		const result = await pool.query(`SELECT * FROM users WHERE email = '${email}'`)
+		console.log(result)
 		const user = result.rows[0]
 		if (!user) {
 			return res.status(401).json({ message: 'Invalid credentials', status: 401 })
@@ -44,11 +47,10 @@ const register = async (req, res) => {
 
 	const hashedPassword = await bcrypt.hash(password, 10)
 	try {
-		const result = await pool.query('INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id', [
-			name,
-			email,
-			hashedPassword,
-		])
+		// const result = await pool.query('INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id', [name, email, hashedPassword])
+		const result = await pool.query(
+			`INSERT INTO users (name, email, password) VALUES ('${name}', '${email}', '${hashedPassword}') RETURNING id`
+		)
 		res.status(201).json({ message: 'User registered', userId: result.rows[0].id, status: 201 })
 	} catch (error) {
 		res.status(500).json({ message: 'Error registering user', error: error.message, status: 500 })
