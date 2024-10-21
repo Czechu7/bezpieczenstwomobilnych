@@ -1,15 +1,19 @@
 import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { Alert, Button, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { login, register } from './src/services/auth/authService'
 
 export default function App() {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 
-	const handleLogin = () => {
+	const handleLogin = async () => {
 		console.log('Email:', email)
 		console.log('Password:', password)
-		Alert.alert('Login', 'Login successful')
+		const res = await login(email, password)
+		if (res) {
+			Alert.alert('Login', 'Login successful')
+		}
 	}
 
 	return (
