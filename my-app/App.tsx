@@ -1,67 +1,50 @@
-import { StatusBar } from 'expo-status-bar'
-import { useState } from 'react'
-import { Alert, Button, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native'
-import { login, register } from './src/services/auth/authService'
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
+import { Button, View, Text, StyleSheet } from 'react-native';
+import LoginScreen from './src/screens/loginScreen';
+import RegisterScreen from './src/screens/registerScreen';
+import HomeScreen from './src/screens/homeScreen';
+type RootStackParamList = {
+  Home: undefined;
+  Login: undefined;
+  Register: undefined;
+};
 
-export default function App() {
-	const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
-	const handleLogin = async () => {
-		console.log('Email:', email)
-		console.log('Password:', password)
-		const res = await login(email, password)
-		console.log('Response:', res)
-		if (res.status === 200) {
-			Alert.alert('Login', 'Login successful')
-		}
-	}
+type HomeScreenProps = {
+  navigation: HomeScreenNavigationProp;
+};
 
-	return (
-		<SafeAreaView style={styles.container}>
-			<View style={styles.loginContainer}>
-				<Text style={styles.label}>Login:</Text>
-				<TextInput style={styles.input} placeholder='Wpisz adres email' value={email} onChangeText={setEmail} />
-				<Text style={styles.label}>Hasło:</Text>
-				<TextInput
-					style={styles.input}
-					placeholder='Wpisz hasło'
-					value={password}
-					onChangeText={setPassword}
-					secureTextEntry
-				/>
-				<Button title='Zaloguj' onPress={handleLogin} />
-			</View>
-		</SafeAreaView>
-	)
-}
+const Stack = createStackNavigator<RootStackParamList>();
+
+const HomeScreenWithNavigation: React.FC<HomeScreenProps> = ({ navigation }) => (
+  <View style={styles.screenContainer}>
+    <Text>Home Screen</Text>
+    <Button title="Login" onPress={() => navigation.navigate('Login')} />
+    <Button title="Register" onPress={() => navigation.navigate('Register')} />
+  </View>
+);
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreenWithNavigation} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#f0f0f0',
-	},
-	loginContainer: {
-		width: '80%',
-		padding: 20,
-		backgroundColor: '#ffffff',
-		borderRadius: 10,
-		shadowColor: '#000',
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.2,
-		shadowRadius: 4,
-	},
-	label: {
-		fontSize: 18,
-		marginBottom: 10,
-	},
-	input: {
-		height: 40,
-		borderColor: '#cccccc',
-		borderWidth: 1,
-		marginBottom: 20,
-		paddingHorizontal: 10,
-	},
-})
+  screenContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default App;
