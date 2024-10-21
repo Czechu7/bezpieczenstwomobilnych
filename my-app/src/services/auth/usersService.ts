@@ -1,7 +1,7 @@
 import axios from 'axios'
 
+const API_URL = 'http://172.20.10.2:3000/v1'
 // const API_URL = 'http://192.168.1.174:3000/v1'
-const API_URL = 'http://192.168.1.174:3000/v1'
 
 export interface User {
 	email: string
