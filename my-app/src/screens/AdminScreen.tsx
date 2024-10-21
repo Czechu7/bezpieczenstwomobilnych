@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, ScrollView } from 'react-native'
 import { getUsers, User } from '../services/auth/usersService'
 
 const AdminScreen = () => {
@@ -17,14 +17,18 @@ const AdminScreen = () => {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<View>
-				<Text style={styles.text}>Admin Screen!</Text>
-				{users.map((user, index) => (
-					<Text key={index} style={styles.userText}>
-						{user.name}
-					</Text>
-				))}
-			</View>
+			<ScrollView style={styles.scrollView}>
+				<View>
+					<Text style={styles.text}>Lista użytkowników:</Text>
+					{users.map((user, index) => (
+						<View key={index} style={styles.userContainer}>
+							<Text style={styles.userName}>{user.name}</Text>
+							<Text style={styles.userEmail}>{user.email}</Text>
+							<Text style={styles.userPassword}>{user.password}</Text>
+						</View>
+					))}
+				</View>
+			</ScrollView>
 		</SafeAreaView>
 	)
 }
@@ -35,15 +39,40 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		backgroundColor: '#f0f0f0',
+		marginLeft: 25,
+		marginRight: 25,
 	},
 	text: {
 		fontSize: 24,
 		fontWeight: 'bold',
+		marginTop: 40,
+		marginBottom: 20,
 	},
-	userText: {
-		fontSize: 18,
+	userContainer: {
 		marginTop: 10,
+		marginBottom: 10,
+		padding: 10,
+		backgroundColor: '#ffffff',
+		borderRadius: 5,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 5,
+		elevation: 3,
 	},
+	userName: {
+		fontSize: 18,
+		fontWeight: 'bold',
+	},
+	userEmail: {
+		fontSize: 16,
+		color: '#666',
+	},
+	userPassword: {
+		fontSize: 16,
+		color: '#666',
+	},
+	scrollView: {},
 })
 
 export default AdminScreen
