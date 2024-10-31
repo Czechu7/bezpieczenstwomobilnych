@@ -13,23 +13,31 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>
 
 type HomeScreenProps = {
 	navigation: HomeScreenNavigationProp
+	isLoggedIn: boolean
 }
 
-const HomeScreenWithNavigation: React.FC<HomeScreenProps> = ({ navigation }) => (
+const HomeScreenWithNavigation: React.FC<HomeScreenProps> = ({ navigation, isLoggedIn }) => (
 	// <ImageBackground source={require('../assets/splash.png')} style={styles.backgroundImage}>
 	<View style={styles.screenContainer}>
 		<Text style={styles.title}>Welcome to the Home Screen</Text>
 		<View style={styles.footer}>
 			<View style={styles.buttonContainer}>
-				<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
-					<Text style={styles.buttonText}>Login</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
-					<Text style={styles.buttonText}>Register</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Admin')}>
-					<Text style={styles.buttonText}>Admin</Text>
-				</TouchableOpacity>
+				{!isLoggedIn ? (
+					<>
+						<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
+							<Text style={styles.buttonText}>Login</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
+							<Text style={styles.buttonText}>Register</Text>
+						</TouchableOpacity>
+					</>
+				) : (
+					<>
+						<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Admin')}>
+							<Text style={styles.buttonText}>Admin</Text>
+						</TouchableOpacity>
+					</>
+				)}
 			</View>
 		</View>
 	</View>

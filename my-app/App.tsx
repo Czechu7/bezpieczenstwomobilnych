@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack'
 import { Button, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
@@ -17,11 +17,23 @@ type RootStackParamList = {
 const Stack = createStackNavigator<RootStackParamList>()
 
 const App = () => {
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+	const onLoginHandler = () => {
+		setIsLoggedIn(true)
+	}
+
+	const logoutHandler = () => {
+		setIsLoggedIn(false)
+	}
+
 	return (
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName='Home'>
-				<Stack.Screen name='Home' component={HomeScreenWithNavigation} />
-				<Stack.Screen name='Login' component={LoginScreen} />
+				<Stack.Screen name='Home'>
+					{props => <HomeScreenWithNavigation {...props} isLoggedIn={isLoggedIn} />}
+				</Stack.Screen>
+				<Stack.Screen name='Login'>{props => <LoginScreen {...props} setIsLoggedIn={onLoginHandler} />}</Stack.Screen>
 				<Stack.Screen name='Register' component={RegisterScreen} />
 				<Stack.Screen name='Admin' component={AdminScreen} />
 			</Stack.Navigator>
