@@ -16,14 +16,29 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ setIsLoggedIn, navigation }) 
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 
+	const isValidEmail = (email: string) => {
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+		return emailRegex.test(email)
+	}
+
 	const handleLogin = async () => {
+		if (!email || !password) {
+			Alert.alert('Błąd', 'Adres email i hasło nie mogą być puste')
+			return
+		}
+
+		if (!isValidEmail(email)) {
+			Alert.alert('Błąd', 'Wprowadź poprawny adres email')
+			return
+		}
+
 		const res = await login(email, password)
 		if (res) {
-			Alert.alert('Login', 'Login successful')
+			Alert.alert('Login', 'Zalogowano się pomyślnie')
 			setIsLoggedIn(true)
 			navigation.navigate('Home')
 		} else {
-			Alert.alert('Login', 'Login failed')
+			Alert.alert('Login', 'Nieprawidłowe logowanie')
 		}
 	}
 
@@ -31,7 +46,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ setIsLoggedIn, navigation }) 
 		<SafeAreaView style={styles.container}>
 			<View style={styles.loginContainer}>
 				<Text style={styles.label}>Login:</Text>
-				<TextInput style={styles.input} placeholder='Wpisz adres email' value={email} onChangeText={setEmail} />
+				<TextInput
+					style={styles.input}
+					placeholder='Wpisz adres email'
+					value={email}
+					onChangeText={setEmail}
+					autoCapitalize='none'
+				/>
 				<Text style={styles.label}>Hasło:</Text>
 				<TextInput
 					style={styles.input}
