@@ -19,7 +19,8 @@ type HomeScreenProps = {
 const HomeScreenWithNavigation: React.FC<HomeScreenProps> = ({ navigation, isLoggedIn }) => (
 	// <ImageBackground source={require('../assets/splash.png')} style={styles.backgroundImage}>
 	<View style={styles.screenContainer}>
-		<Text style={styles.title}>Welcome to the Home Screen</Text>
+		<Text style={styles.title}>Witaj w aplikacji!</Text>
+		<Text style={styles.title2}>Zaloguj się bądź utwórz konto.</Text>
 		<View style={styles.footer}>
 			<View style={styles.buttonContainer}>
 				{!isLoggedIn ? (
@@ -60,6 +61,10 @@ const styles = StyleSheet.create({
 		color: '#ffffff',
 		marginBottom: 20,
 		fontWeight: 'bold',
+	},
+	title2: {
+		fontSize: 18,
+		color: '#ffffff',
 	},
 	footer: {
 		position: 'absolute',
