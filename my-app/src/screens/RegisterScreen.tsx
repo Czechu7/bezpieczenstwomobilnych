@@ -15,7 +15,6 @@ const RegisterScreen = () => {
 	}
 
 	const handleRegister = async () => {
-		// Validate inputs
 		if (!name || !email || !password) {
 			Alert.alert('Błąd', 'Wszystkie pola są wymagane')
 			return
@@ -31,7 +30,6 @@ const RegisterScreen = () => {
 			return
 		}
 
-		// Proceed with registration if validation passes
 		const res = await register(name, email, password, otherData)
 		if (res) {
 			Alert.alert('Register', 'Zarejestrowano się pomyślnie')
