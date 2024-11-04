@@ -7,6 +7,7 @@ type RootStackParamList = {
 	Login: undefined
 	Register: undefined
 	Admin: undefined
+	Storage: undefined
 }
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>
@@ -36,6 +37,9 @@ const HomeScreenWithNavigation: React.FC<HomeScreenProps> = ({ navigation, isLog
 					<>
 						<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Admin')}>
 							<Text style={styles.buttonText}>Admin</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Storage')}>
+							<Text style={styles.buttonText}>Storage</Text>
 						</TouchableOpacity>
 					</>
 				)}
