@@ -7,6 +7,7 @@ import { API_URL } from '@env'
 
 export const login = async (email: string, password: string) => {
 	try {
+		console.log('Trying to login')
 		const response = await axios.post(`${API_URL}/login`, { email, password })
 		return response.data
 	} catch (error) {
