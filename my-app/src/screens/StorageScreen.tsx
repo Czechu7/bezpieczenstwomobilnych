@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Alert, SafeAreaView, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 const StorageScreen = () => {
   const [inputData, setInputData] = useState('');
@@ -14,10 +14,10 @@ const StorageScreen = () => {
       return;
     }
     try {
-      const storedData = await AsyncStorage.getItem('dataList');
+      const storedData = await EncryptedStorage.getItem('dataList');
       const dataArray = storedData ? JSON.parse(storedData) : [];
       dataArray.push(inputData);
-      await AsyncStorage.setItem('dataList', JSON.stringify(dataArray));
+      await EncryptedStorage.setItem('dataList', JSON.stringify(dataArray));
       setDataList(dataArray);
       setInputData('');
       Alert.alert('Sukces', 'Dane zostały zapisane');
@@ -28,7 +28,7 @@ const StorageScreen = () => {
 
   const loadData = async () => {
     try {
-      const storedData = await AsyncStorage.getItem('dataList');
+      const storedData = await EncryptedStorage.getItem('dataList');
       const dataArray = storedData ? JSON.parse(storedData) : [];
       setDataList(dataArray);
     } catch (error) {
@@ -40,7 +40,7 @@ const StorageScreen = () => {
     try {
       const updatedDataList = [...dataList];
       updatedDataList.splice(index, 1);
-      await AsyncStorage.setItem('dataList', JSON.stringify(updatedDataList));
+      await EncryptedStorage.setItem('dataList', JSON.stringify(updatedDataList));
       setDataList(updatedDataList);
       Alert.alert('Sukces', 'Dane zostały usunięte');
     } catch (error) {
@@ -54,7 +54,7 @@ const StorageScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Lista Danych</Text>
+      <Text style={styles.title}>Lista Danych (Szyfrowane)</Text>
       <TextInput
         style={styles.input}
         placeholder='Wpisz dane do zapisania'
