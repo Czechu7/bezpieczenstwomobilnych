@@ -10,10 +10,19 @@ import sanitizeBodyMiddleware from './middleware/sanitizeBodyMiddleware.js'
 import helmet from 'helmet'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
+
 const app = express()
+
 app.use(express.json())
 app.use(helmet())
-app.use(cors())
+
+let corsOptions = {
+	origin: '*',
+	optionsSuccessStatus: 200,
+}
+
+app.use(cors(corsOptions))
+
 // Konfiguracja SSL
 const options = {
 	key: fs.readFileSync('key.pem'),
