@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres
+    container_name: db_bezpiecznemobilki
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=mobilne
+    ports:
+      - '5432:5432'
+    networks:
+      - app-network
+
+  bezpiecznemobilki_api:
+    image: bezpiecznemobilki_api:latest
+    container_name: bezpiecznemobilki_api
+    ports:
+      - '3001:3001'
+      - '3002:3002'
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

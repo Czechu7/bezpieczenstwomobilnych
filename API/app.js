@@ -16,22 +16,22 @@ app.use(helmet())
 app.use(cors())
 // Konfiguracja SSL
 const options = {
-  key: fs.readFileSync('key.pem'),
-  cert: fs.readFileSync('cert.pem')
+	key: fs.readFileSync('key.pem'),
+	cert: fs.readFileSync('cert.pem'),
 }
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minut
-	max: 100 // limit 100 zapytań na IP
-  })
-  app.use(limiter)
+	max: 100, // limit 100 zapytań na IP
+})
+app.use(limiter)
 // Middleware do przekierowania HTTP -> HTTPS
 app.use((req, res, next) => {
-  if (!req.secure) {
-    return res.redirect(['https://', req.get('Host'), req.url].join(''));
-  }
-  next();
-});
+	if (!req.secure) {
+		return res.redirect(['https://', req.get('Host'), req.url].join(''))
+	}
+	next()
+})
 
 createUserTable()
 
@@ -48,7 +48,7 @@ app.post('/v2/register', registerSecured)
 app.post('/v2/login', loginSecured)
 
 // Utworzenie serwerów HTTP i HTTPS
-http.createServer(app).listen(80);
-https.createServer(options, app).listen(443, () => {
-  console.log('Server is running on ports 80 (HTTP) and 443 (HTTPS)')
+http.createServer(app).listen(3001)
+https.createServer(options, app).listen(3002, () => {
+	console.log('Server is running on ports 3001 (HTTP) and 3002 (HTTPS)')
 })
