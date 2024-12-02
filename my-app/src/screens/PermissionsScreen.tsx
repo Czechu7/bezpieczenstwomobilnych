@@ -1,148 +1,114 @@
 // src/screens/PermissionsScreen.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { Camera } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import * as Contacts from 'expo-contacts';
-import * as ImagePicker from 'expo-image-picker';
+import { Audio } from 'expo-av';
 
 const PermissionsScreen = () => {
-  const [hasPermissions, setHasPermissions] = useState({
+  const [permissions, setPermissions] = useState({
     camera: false,
     location: false,
     contacts: false,
     microphone: false,
   });
 
-  // Request permissions on mount
-  useEffect(() => {
-    checkPermissions();
-  }, []);
+  const requestCameraPermission = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    setPermissions(prev => ({ ...prev, camera: status === 'granted' }));
+    if (status !== 'granted') {
+      Alert.alert('Uprawnienia', 'Dostęp do kamery jest potrzebny do robienia zdjęć.');
+    }
+  };
 
-  const checkPermissions = async () => {
-    const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
-    const { status: locationStatus } = await Location.requestForegroundPermissionsAsync();
-    const { status: contactsStatus } = await Contacts.requestPermissionsAsync();
-    const { status: microphoneStatus } = await ImagePicker.requestCameraPermissionsAsync();
+  const requestLocationPermission = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    setPermissions(prev => ({ ...prev, location: status === 'granted' }));
+    if (status !== 'granted') {
+      Alert.alert('Uprawnienia', 'Dostęp do lokalizacji jest potrzebny do wyświetlania Twojej pozycji.');
+    }
+  };
 
-    setHasPermissions({
-      camera: cameraStatus === 'granted',
-      location: locationStatus === 'granted',
-      contacts: contactsStatus === 'granted',
-      microphone: microphoneStatus === 'granted',
-    });
+  const requestContactsPermission = async () => {
+    const { status } = await Contacts.requestPermissionsAsync();
+    setPermissions(prev => ({ ...prev, contacts: status === 'granted' }));
+    if (status !== 'granted') {
+      Alert.alert('Uprawnienia', 'Dostęp do kontaktów jest potrzebny do wyświetlania Twoich kontaktów.');
+    }
+  };
+
+  const requestMicrophonePermission = async () => {
+    const { status } = await Audio.requestPermissionsAsync();
+    setPermissions(prev => ({ ...prev, microphone: status === 'granted' }));
+    if (status !== 'granted') {
+      Alert.alert('Uprawnienia', 'Dostęp do mikrofonu jest potrzebny do nagrywania dźwięku.');
+    }
   };
 
   const handleCameraPress = async () => {
-    if (!hasPermissions.camera) {
-      Alert.alert(
-        'Wymagane uprawnienia',
-        'Aby korzystać z kamery, musisz przyznać uprawnienia.',
-        [
-          { text: 'Anuluj', style: 'cancel' },
-          { text: 'Przyznaj', onPress: checkPermissions }
-        ]
-      );
-      return;
+    if (!permissions.camera) await requestCameraPermission();
+    if (permissions.camera) {
+      const result = await ImagePicker.launchCameraAsync();
+      if (!result.canceled) {
+        Alert.alert('Sukces', 'Zrobiono zdjęcie!');
+      }
+    } else {
+      Alert.alert('Informacja', 'Brak dostępu do kamery.');
     }
-    // Handle camera functionality
   };
 
   const handleLocationPress = async () => {
-    if (!hasPermissions.location) {
-      Alert.alert(
-        'Wymagane uprawnienia',
-        'Aby korzystać z lokalizacji, musisz przyznać uprawnienia.',
-        [
-          { text: 'Anuluj', style: 'cancel' },
-          { text: 'Przyznaj', onPress: checkPermissions }
-        ]
-      );
-      return;
-    }
-
-    try {
+    if (!permissions.location) await requestLocationPermission();
+    if (permissions.location) {
       const location = await Location.getCurrentPositionAsync({});
-      Alert.alert('Lokalizacja', `Lat: ${location.coords.latitude}, Lng: ${location.coords.longitude}`);
-    } catch (error) {
-      Alert.alert('Błąd', 'Nie udało się pobrać lokalizacji');
+      Alert.alert(
+        'Lokalizacja',
+        `Szerokość: ${location.coords.latitude}\nDługość: ${location.coords.longitude}`
+      );
+    } else {
+      Alert.alert('Informacja', 'Brak dostępu do lokalizacji.');
     }
   };
 
   const handleContactsPress = async () => {
-    if (!hasPermissions.contacts) {
-      Alert.alert(
-        'Wymagane uprawnienia',
-        'Aby korzystać z kontaktów, musisz przyznać uprawnienia.',
-        [
-          { text: 'Anuluj', style: 'cancel' },
-          { text: 'Przyznaj', onPress: checkPermissions }
-        ]
-      );
-      return;
-    }
-
-    try {
+    if (!permissions.contacts) await requestContactsPermission();
+    if (permissions.contacts) {
       const { data } = await Contacts.getContactsAsync();
-      Alert.alert('Kontakty', `Znaleziono ${data.length} kontaktów`);
-    } catch (error) {
-      Alert.alert('Błąd', 'Nie udało się pobrać kontaktów');
+      Alert.alert('Kontakty', `Znaleziono ${data.length} kontaktów.`);
+    } else {
+      Alert.alert('Informacja', 'Brak dostępu do kontaktów.');
     }
   };
 
   const handleMicrophonePress = async () => {
-    if (!hasPermissions.microphone) {
-      Alert.alert(
-        'Wymagane uprawnienia',
-        'Aby korzystać z mikrofonu, musisz przyznać uprawnienia.',
-        [
-          { text: 'Anuluj', style: 'cancel' },
-          { text: 'Przyznaj', onPress: checkPermissions }
-        ]
-      );
-      return;
+    if (!permissions.microphone) await requestMicrophonePermission();
+    if (permissions.microphone) {
+      Alert.alert('Mikrofon', 'Mikrofon jest gotowy do użycia.');
+      // Tu możesz dodać funkcjonalność nagrywania dźwięku
+    } else {
+      Alert.alert('Informacja', 'Brak dostępu do mikrofonu.');
     }
-    // Handle microphone functionality
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Uprawnienia aplikacji</Text>
-      
-      <TouchableOpacity 
-        style={[styles.button, !hasPermissions.camera && styles.buttonDisabled]}
-        onPress={handleCameraPress}
-      >
-        <Text style={styles.buttonText}>
-          Kamera {hasPermissions.camera ? '✓' : '✗'}
-        </Text>
+      <Text style={styles.title}>Uprawnienia i Funkcje</Text>
+
+      <TouchableOpacity style={styles.button} onPress={handleCameraPress}>
+        <Text style={styles.buttonText}>Kamera</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={[styles.button, !hasPermissions.location && styles.buttonDisabled]}
-        onPress={handleLocationPress}
-      >
-        <Text style={styles.buttonText}>
-          Lokalizacja {hasPermissions.location ? '✓' : '✗'}
-        </Text>
+      <TouchableOpacity style={styles.button} onPress={handleLocationPress}>
+        <Text style={styles.buttonText}>Lokalizacja</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={[styles.button, !hasPermissions.contacts && styles.buttonDisabled]}
-        onPress={handleContactsPress}
-      >
-        <Text style={styles.buttonText}>
-          Kontakty {hasPermissions.contacts ? '✓' : '✗'}
-        </Text>
+      <TouchableOpacity style={styles.button} onPress={handleContactsPress}>
+        <Text style={styles.buttonText}>Kontakty</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity 
-        style={[styles.button, !hasPermissions.microphone && styles.buttonDisabled]}
-        onPress={handleMicrophonePress}
-      >
-        <Text style={styles.buttonText}>
-          Mikrofon {hasPermissions.microphone ? '✓' : '✗'}
-        </Text>
+      <TouchableOpacity style={styles.button} onPress={handleMicrophonePress}>
+        <Text style={styles.buttonText}>Mikrofon</Text>
       </TouchableOpacity>
     </View>
   );
@@ -152,27 +118,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 30,
     textAlign: 'center',
   },
   button: {
     backgroundColor: '#6200ee',
     padding: 15,
     borderRadius: 8,
-    marginBottom: 10,
-  },
-  buttonDisabled: {
-    backgroundColor: '#cccccc',
+    marginBottom: 15,
   },
   buttonText: {
     color: '#ffffff',
-    fontSize: 16,
     textAlign: 'center',
+    fontSize: 18,
   },
 });
 

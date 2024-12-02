@@ -11,6 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "jsEngine": "jsc",
     "ios": {
       "supportsTablet": true
     },
@@ -19,35 +20,37 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.czechu7.myapp"
+      "package": "com.czechu7.myapp",
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [
-        "expo-camera",
+        "expo-image-picker",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+          "cameraPermission": "Aplikacja potrzebuje dostępu do twoich zdjęć, aby zapisywać zdjęcia."
         }
       ],
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Aplikacja potrzebuje dostępu do twojej lokalizacji."
         }
       ],
       [
         "expo-contacts",
         {
-          "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts."
+          "contactsPermission": "Aplikacja potrzebuje dostępu do twoich kontaktów, aby je wyświetlić."
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Aplikacja potrzebuje dostępu do twojego mikrofonu."
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "52af8783-1b43-4b3b-bdad-94194ce376f5"
-      }
-    }
+    ]
   }
 }
