@@ -10,13 +10,14 @@ import RegisterScreen from './src/screens/RegisterScreen';
 import AdminScreen from './src/screens/AdminScreen';
 import StorageScreen from './src/screens/StorageScreen';
 import HomeScreenWithNavigation from './src/screens/HomeScreenWithNavigation';
-
+import PermissionsScreen from './src/screens/PermissionsScreen';
 type RootStackParamList = {
   Home: undefined;
   Login: undefined;
   Register: undefined;
   Admin: undefined;
   Storage: undefined;
+  Permissions: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -68,6 +69,7 @@ const App = () => {
         <Stack.Screen name='Register' component={RegisterScreen} />
         <Stack.Screen name='Admin' component={AdminScreen} />
         <Stack.Screen name='Storage' component={StorageScreen} />
+        <Stack.Screen name="Permissions" component={PermissionsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
